@@ -1113,18 +1113,18 @@ func main() {
 				continue
 			}
 			for i := 0;i < len(play.Inventory);i++ {
-				if strings.Contains(play.Inventory[i].Item.Name, fuzzyItem) {
-					slot := play.Inventory[i].Item.Slot
+				if strings.Contains(play.Inventory[i].Name, fuzzyItem) {
+					slot := play.Inventory[i].Slot
 					fmt.Println(slot, " Matches.")
 					if play.Equipped[slot].Item.Vnum == 0 {
 						if play.Inventory[i].Number > 1 {
 							play.Inventory[i].Number--
-							play.Equipped[slot].Item = play.Inventory[i].Item
-						}else if play.Inventory[i].Item.Slot == slot {
+							play.Equipped[slot].Item = play.Inventory[i]
+						}else if play.Inventory[i].Slot == slot {
 							if play.Equipped[i].Item.Vnum == 0 {
 								var blank Object
-								play.Equipped[slot].Item = play.Inventory[i].Item
-								play.Inventory[i].Item = blank
+								play.Equipped[slot].Item = play.Inventory[i]
+								play.Inventory[i] = blank
 								play.Inventory[i].Number--
 							}
 
@@ -1152,13 +1152,13 @@ func main() {
 					invSlot := 0
 					INV:
 					for c := len(play.Inventory)-1;c >= 0;c-- {
-						if play.Inventory[c].Item.Vnum == play.Equipped[i].Item.Vnum {
+						if play.Inventory[c].Vnum == play.Equipped[i].Item.Vnum {
 							invSlot = c
 							break INV
-						}else if play.Inventory[c].Item.Vnum == 0 {
+						}else if play.Inventory[c].Vnum == 0 {
 							invSlot = c
 						}
-						if c == len(play.Inventory)-1 && play.Inventory[c].Item.Vnum != 0 {
+						if c == len(play.Inventory)-1 && play.Inventory[c].Vnum != 0 {
 							fmt.Print("You don't have enough space in your inventory to remove that!")
 							break REM
 						}
@@ -1206,11 +1206,11 @@ func main() {
 							scanner.Scan()
 							ATTACH:
 							for i := 0;i < len(play.Inventory);i++ {
-									if strings.Contains(play.Inventory[i].Item.Name, scanner.Text()) {
+									if strings.Contains(play.Inventory[i].Name, scanner.Text()) {
 										var transaction OnlineTransaction
 
-										fmt.Print("\033[26;90H\033[38:2:150:150:0mAttaching ",play.Inventory[i].Item.Name, "\033[0m")
-										transaction.Item = play.Inventory[i].Item
+										fmt.Print("\033[26;90H\033[38:2:150:150:0mAttaching ",play.Inventory[i].Name, "\033[0m")
+										transaction.Item = play.Inventory[i]
 										transaction.Sold = false
 										transaction.To = play.BankAccount
 										setPrice := false
@@ -1241,11 +1241,11 @@ func main() {
 									}
 							}
 							for i := 0;i < len(play.Inventory);i++ {
-								if play.Inventory[i].Item.Name == bs.Payload.Transaction.Item.Name {
+								if play.Inventory[i].Name == bs.Payload.Transaction.Item.Name {
 									if play.Inventory[i].Number > 1 {
 										play.Inventory[i].Number--
 									}else {
-										play.Inventory[i].Item = allItems[0]
+										play.Inventory[i] = allItems[0]
 										play.Inventory[i].Number = 0
 									}
 								}
@@ -1320,11 +1320,11 @@ func main() {
 		if strings.HasPrefix(input, "eat ") {
 			toEat := strings.Split(input, " ")[1]
 			for i := 0;i < len(play.Inventory);i++ {
-				if strings.Contains(play.Inventory[i].Item.Name, toEat) {
+				if strings.Contains(play.Inventory[i].Name, toEat) {
 					play.Inventory[i].Number--
 					if play.Inventory[i].Number <= 0 {
 						play.Inventory[i].Number = 0
-						play.Inventory[i].Item = allItems[0]
+						play.Inventory[i] = allItems[0]
 					}
 				}
 			}
@@ -1340,7 +1340,7 @@ func main() {
 			inc := false
 			if inc == false {
 				for i := 0;i < len(play.Inventory);i++ {
-					if play.Inventory[i].Item.Name == obj.Name {
+					if play.Inventory[i].Name == obj.Name {
 							play.Inventory[i].Number++
 							inc = true
 					}
@@ -1353,7 +1353,7 @@ func main() {
 			if inc == false {
 				for i := 0;i < len(play.Inventory);i++ {
 					if play.Inventory[i].Number == 0 {
-						play.Inventory[i].Item = obj
+						play.Inventory[i] = obj
 						play.Inventory[i].Number++
 						inc = true
 						break

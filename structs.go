@@ -59,6 +59,7 @@ type SignIn struct {
 type InventoryItem struct {
 	Item Object
 	Number int
+	Amount int
 }
 type SignInPayload struct {
 	Name string
@@ -75,6 +76,8 @@ type Object struct {
 	X int
 	Y int
 	Owned bool
+	Amount int
+	Number int
 }
 
 type BroadcastPayload struct {
@@ -174,7 +177,8 @@ type EquipmentItem struct {
 type Player struct {
 	Name string
 	Title string
-	Inventory []InventoryItem
+	InventoryStore InventoryBank
+	Inventory []Object
 	Equipment []int
 	Equipped []EquipmentItem
 	CoreBoard string
